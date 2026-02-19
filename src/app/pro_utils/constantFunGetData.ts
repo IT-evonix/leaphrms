@@ -290,7 +290,7 @@ export async function funGetClientEmployeeAttendanceforManager(client_id: any, d
     return { totalActiveEmployees: totalemployeeData.length, presentCount: employeeData.length, employees: employeeData };
   }
 }
-
+// table is incorrect
 export async function funGetClientAnnouncement(client_id: any, date: any) {
   let query = supabase.from("leap_customer_attendance")
     .select(`*`)
