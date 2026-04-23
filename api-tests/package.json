@@ -1,0 +1,23 @@
+{
+  "name": "leaphrms-api-tests",
+  "version": "1.0.0",
+  "description": "API testing suite for Leap HRMS",
+  "main": "auth.test.js",
+  "scripts": {
+    "test": "node auth.test.js",
+    "test:auth": "node auth.test.js",
+    "test:users": "node users.test.js",
+    "test:whatsapp": "node whatsapp.test.js",
+    "test:all": "node run test:auth && node run test:users && node run test:whatsapp",
+    "test:coverage": "node run test:auth && node run test:users && node run test:whatsapp && echo '✅ All tests completed!'"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.0"
+  },
+  "keywords": ["api", "testing", "hrms", "leap"],
+  "author": "Evonix",
+  "license": "MIT"
+}
