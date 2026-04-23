@@ -8,8 +8,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || ""); // Default: 1
-    const pageSize = parseInt(searchParams.get("limit") || ""); // Default: 20 per page
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const pageSize = parseInt(searchParams.get("limit") || "20", 10);
 
     let leaveBalances;
     const { client_id, branch_id, start_date, end_date, id, leave_status, customer_id,  leave_type } = await request.json();

@@ -15,10 +15,10 @@ export async function POST(request: NextRequest) {
         //   );
         // }
         const { role_id, client_id, branch_id } = await request.json();
-        if (role_id! && role_id == "1" || role_id == "2" || role_id == "3") {
+        if (role_id == "1" || role_id == "2" || role_id == "3") {
             return sendAllAnnouncements(client_id, branch_id)
         } else {
-            return sendUsersAnnouncement(role_id, branch_id)
+            return sendUsersAnnouncement(role_id, client_id, branch_id)
         }
     } catch (error) {
         return funSendApiException(error);
@@ -39,13 +39,17 @@ async function sendAllAnnouncements(client_id: any, branch_id: any) {
     if (taskError) {
         return funSendApiErrorMessage(taskError, "Failed to get announcement");
     }
-    return NextResponse.json({ status: 1, message: "All Announcement", data: TaskData }, { status: apiStatusSuccessCode })
+    const today = dashedDateYYYYMMDD(new Date());
+    const active = (TaskData || []).filter((a: any) => !a.validity_date || a.validity_date >= today);
+    const previous = (TaskData || []).filter((a: any) => a.validity_date && a.validity_date < today);
+    return NextResponse.json({ status: 1, message: "All Announcement", active, previous }, { status: apiStatusSuccessCode })
 }
 
-async function sendUsersAnnouncement(roleid: any, branchid: any) {  
+async function sendUsersAnnouncement(roleid: any, clientid: any, branchid: any) {
     let alldata: any[] = [];
 
     const role_id = roleid;
+    const client_id = clientid;
     const branch_id = branchid;
 
     // const orCondition = `leap_show_announcement_users.designation_id.eq.${designationId},  leap_show_announcement_users.department_id.eq.${departmentID}`;
@@ -60,6 +64,7 @@ async function sendUsersAnnouncement(roleid: any, branchid: any) {
             `)
         .eq('role_id', role_id)
         .eq('branch_id', branch_id)
+        .eq("leap_client_announcements.client_id", client_id)
         .eq("leap_client_announcements.isEnabled", true)
         .eq("leap_client_announcements.isDeleted", false)
 

@@ -7,6 +7,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { ALERTMSG_FormExceptionString, whatsapp_number } from '@/app/pro_utils/stringConstants'
 import ShowAlertMessage from '@/app/components/alert'
 import { pageURL_whatsappSuccessPage } from '@/app/pro_utils/stringRoutes';
+import { whatsappCustomerInfoModel } from '@/app/models/singleTableModels'
+import { getCustomerClientIds } from '@/app/pro_utils/constantFunGetData'
 
 interface attendanceModel {
   working_type_id: string;
@@ -33,10 +35,12 @@ const AttendanceResumeForm: React.FC = () => {
   const [userData, setuserData] = useState<whatsappCustomerInfoModel[]>([]);
   const router = useRouter()
   useEffect(() => {
+    if (!contactNumber) return;
+    
     setLoadingCursor(true);
 
     const fetchData = async () => {
-      const custData = await getCustomerClientIds(contactNumber!);
+      const custData = await getCustomerClientIds(contactNumber);
       setuserData(custData);
       const workType = await getWorkType();
       setWork(workType);
@@ -58,8 +62,8 @@ const AttendanceResumeForm: React.FC = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [])
-  // start 5 min timer when page loads
+  }, [contactNumber])
+  // start 5 min timer when page loads
   useEffect(() => {
 
     const expiryTimer = setTimeout(() => {
@@ -68,7 +72,7 @@ const AttendanceResumeForm: React.FC = () => {
     }, 5 * 60 * 1000); // 5 min
 
     return () => clearTimeout(expiryTimer);
-  }, []);
+  }, [router]);
 
   const getLocation = () => {
     if (navigator.geolocation) {

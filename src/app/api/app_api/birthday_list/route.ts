@@ -50,10 +50,13 @@ export async function POST(request: NextRequest) {
                 const date = new Date(birthday.ocassion_date);
                 return date.getMonth() + 1 === parseInt(month) && date.getDate() === parseInt(day);
               });
-            upcommingList= birthdayList.filter((birthday) => {
+            const todayMMDD = `${month}-${day}`;
+            upcommingList = birthdayList.filter((birthday) => {
                 const date = new Date(birthday.ocassion_date);
-                return date.getMonth() + 1 >= parseInt(month) && date.getDate() >= parseInt(day);
-              });
+                const mm = String(date.getMonth() + 1).padStart(2, "0");
+                const dd = String(date.getDate()).padStart(2, "0");
+                return `${mm}-${dd}` >= todayMMDD;
+            });
         }
 
         return NextResponse.json({

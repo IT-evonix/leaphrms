@@ -333,7 +333,7 @@ interface SupportStatus {
   created_at: string
 }
 
-interface whatsappCustomerInfoModel {
+export interface whatsappCustomerInfoModel {
   customer_id: string
   client_id: string
   branch_id: string

@@ -64,7 +64,7 @@ const Dashboard = () => {
 
 
     useEffect(() => {
-
+        if (!contextCustomerID) return;
         fetchDashboard();
         fetchTeamMembers();
         const handleScroll = () => {
@@ -81,7 +81,7 @@ const Dashboard = () => {
             // clearInterval(intervalId);
             window.removeEventListener('scroll', handleScroll);
         };
-    }, []);
+    }, [contextCustomerID]);
 
     const fetchDashboard = async () => {
         setLoading(true);
@@ -101,11 +101,11 @@ const Dashboard = () => {
 
                 setWorkingTime(response.workingHour);
                 setGreetData(response.greeting);
-                setHolidays(response.upcommingHolidays.holidays);
-                setBalanceLeave(response.myLeaveBalances.customerLeavePendingCount);
-                setAttendanceData(response.myattendance[0]);
-                setTask(response.my_tasks);
-                setName(response.my_name.firstName);
+                setHolidays(response.upcommingHolidays?.holidays ?? []);
+                setBalanceLeave(response.myLeaveBalances?.customerLeavePendingCount ?? []);
+                setAttendanceData(response.myattendance?.[0]);
+                setTask(response.my_tasks ?? []);
+                setName(response.my_name?.firstName ?? '');
                 setNotifyData(response.notification);
             } else {
                 setLoading(false);
@@ -133,29 +133,19 @@ const Dashboard = () => {
                 }),
             });
             const response = await res.json();
-            const managerData = response.data.manager;
-            const teamData = response.data.teamMembers;
-            const subData = response.data.subordinates;
             if (response.status === 1) {
-                setManagerData(managerData)
-                setTeam(teamData)
-                setSubArray(subData)
+                setManagerData(response.data.manager)
+                setTeam(response.data.teamMembers)
+                setSubArray(response.data.subordinates)
             } else {
-                // setManagerData([]);
                 setTeam([]);
                 setSubArray([]);
-                setShowAlert(true);
-                setAlertTitle("Error")
-                setAlertStartContent("Failed to load team members");
-                setAlertForSuccess(2)
             }
             setLoadingCursor(false);
         } catch (error) {
-            console.error("Error fetching user data:", error);
-            setShowAlert(true);
-            setAlertTitle("Exception")
-            setAlertStartContent("Error loading team data");
-            setAlertForSuccess(2)
+            console.error("Error fetching team data:", error);
+            setTeam([]);
+            setSubArray([]);
         }
     };
 

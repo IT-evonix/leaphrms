@@ -178,8 +178,8 @@ const LeapHeader = ({ title }: any) => {
                         {/* <div className="dash_logo"><img src="/images/dashboard-logo.png" className="img-fluid" /></div> */}
                         <div className="dash_topbox">
                             <div className="welcome_text" style={{display:"flex"}}>
-                                {subTitle}<span>{title} {contextUserName}</span>
-                                <div style={{ display: "none" }}>{contextLogoURL}</div>
+                                {subTitle ?? ''}<span>{title} {contextUserName ?? ''}</span>
+                                <div style={{ display: "none" }}>{contextLogoURL ?? ''}</div>
                                 
                             </div>
                             

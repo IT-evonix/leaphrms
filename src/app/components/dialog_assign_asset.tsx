@@ -322,8 +322,8 @@ const DialogAssignAsset = ({ asset_id, onClose }: { asset_id: any, onClose: () =
                                         </div>
                                         <div className="row">
                                             <div className="col-lg-5">
-                                                <div className="row">
-                                                    <div className="col-lg-12 mb-1">Date of Allotment<span className='req_text' style={{color:""}}>*</span> : </div>
+                                                <div className="form_box">
+                                                    <label htmlFor="exampleFormControlInput1" className="form-label" >Date of Allotment<span className='req_text'>*</span> :  </label>
                                                 </div>
                                                 <div className="form_box mb-3">
                                                     <input type="date" id="givenDate" name="givenDate" value={formValues.givenDate} onChange={handleInputChange} />

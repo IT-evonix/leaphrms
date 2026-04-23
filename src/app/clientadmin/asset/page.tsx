@@ -740,7 +740,7 @@ const Asset = () => {
                                                 <div className="text-center">No Assets Available</div>
                                             )}
                                             <div className={showDialog ? "rightpoup rightpoupopen" : "rightpoup"}>
-                                                {showDialog && <AssetUpdate id={editAssetTypeId} onClose={() => { setShowDialog(false), fetchData(0) }} />}
+                                                {showDialog && <AssetUpdate id={editAssetTypeId} onClose={() => { setShowDialog(false), fetchData(filterID), handleMenuClick(filterID) }} />}
                                             </div>
 
                                             <div className={showAssignAssetDialog ? "rightpoup rightpoupopen" : "rightpoup"}>

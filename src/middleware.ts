@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "../utils/supabase/middleware";
-import { useGlobalContext } from "./app/contextProviders/loggedInGlobalContext";
 
 
 export async function middleware(request: NextRequest) {
@@ -37,15 +36,57 @@ export async function middleware(request: NextRequest) {
       "/whats-app/apply-leave",
       "/whats-app",
       "/whats-app/leave-details",
-      "/whats-app/support-details"
-      // "/firebase-messaging-sw.js"
+      "/whats-app/support-details",
+      "/api/auth/login",
+      "/api/auth/register",
+      "/api/auth/update-password",
+      "/api/users/getUserProfile",
+      "/api/users/updateEmployee",
+      "/api/users/resetUserDeviceID",
+      "/api/client/getClients",
+      "/api/users/addTask",
+      "/api/users/getTaskTypes",
+      "/api/users/getTaskStatus",
+      "/api/users/project/getProjectSubProject",
+      "/api/users/project/addProject",
+      "/api/users/project/addSubProject",
+      "/api/users/applyLeave",
+      "/api/users/updateAppliedLeave",
+      "/api/users/showLeaveType",
+      "/api/users/getLeaveBalance",
+      "/api/users/support/raiseSupport",
+      "/api/users/support/supportList",
+      "/api/UploadFiles",
+      "/api/UploadFiles/uploadDocuments",
+      "/api/clientAdmin/get_supportrequest",
+      "/api/clientAdmin/mark_emp_attendance",
+      "/api/updateAttendanceLocation",
+      "/api/chatBot/addTask",
+      "/api/chatBot/markAttendance",
+      "/api/chatBot/userVerificationCheck",
+      "/api/chatBot/webPageForm",
+      "/firebase-messaging-sw.js"
     ];
 
   // ✅ Allow password reset & confirmation pages to be accessed
- 
   if (pathname === "/" || allowList.some(p => lowerPath.includes(p))) {
-      console.log("Middleware called ---- ", pathname);
       return NextResponse.next();
+  }
+
+  // ✅ Role-based URL guard — redirect users who navigate to wrong-role pages
+  const roleId = request.cookies.get("role_id")?.value;
+  const adminToggle = request.cookies.get("isAdmin")?.value;
+  const isAdminRole = roleId && ["1", "2", "3"].includes(roleId);
+  const isEmployeeRole = roleId && ["4", "5", "9"].includes(roleId);
+
+  // Block employees/managers from accessing admin pages
+  if (isEmployeeRole && (lowerPath.startsWith("/dashboard") || lowerPath.startsWith("/clientadmin"))) {
+    return NextResponse.redirect(new URL("/user/dashboard", request.url));
+  }
+
+  // Block admins from accessing employee pages (unless they toggled into employee view)
+  if (isAdminRole && lowerPath.startsWith("/user") && adminToggle !== "false") {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   // ✅ Apply session update for all other routes

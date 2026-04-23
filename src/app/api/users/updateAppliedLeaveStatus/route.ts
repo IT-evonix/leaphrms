@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
        
         leave_status: status,
         approve_disapprove_remark: status_remark || null,
-        isAssigned: "FALSE",
+        isAssigned: false,
         
       })
       .eq('id', leave_id )
@@ -27,11 +27,6 @@ export async function POST(request: NextRequest) {
     
     if (error) {
       return funSendApiErrorMessage(error, "Leave Update Issue");
-    }
-    
-    if (error) {
-        // console.log(error);
-        return funSendApiErrorMessage("Update Activity", "Customer Leave Activity Insert Issue");
     }
     let query = supabase
         .from('leap_client_useractivites')

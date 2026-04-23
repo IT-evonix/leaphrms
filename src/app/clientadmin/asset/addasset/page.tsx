@@ -292,7 +292,7 @@ const AddAsset: React.FC = () => {
                             </div>
                             <div className="col-md-4">
                               <div className="form_box mb-3">
-                                <label htmlFor="formFile" className="form-label">Warranty Date<span className='req_text'>*</span>: </label>
+                                <label htmlFor="formFile" className="form-label">Warranty Date: </label>  {/* removed astrick by priyanka */}
                                 <input type="date" id="warranty_date" name="warranty_date" value={formValues.warranty_date} min={formValues.purchased_at} onChange={handleInputChange} />
                                 {errors.warranty_date && <span className='error' style={{ color: "red" }}>{errors.warranty_date}</span>}
                               </div>

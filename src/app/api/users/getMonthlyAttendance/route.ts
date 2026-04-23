@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     const { data: attendanceData, error: attendanceError } = await supabase
       .from("leap_customer_attendance")
-      .select("date,in_time")
+      .select("date, in_time, out_time, total_hours")
       .eq("customer_id", customer_id)
       .gte("date", startDate)
       .lte("date", endDate);
@@ -65,20 +65,22 @@ export async function POST(request: NextRequest) {
       return funSendApiErrorMessage(holidayError, "Unable to fetch holiday data");
     }
 
-    const attendanceMap = new Map<string, boolean>();
+    const attendanceMap = new Map<string, { present: boolean; total_hours: number | null }>();
     attendanceData?.forEach(entry => {
+      if (!entry.date) return;
       const normalizedDate = formatDateYYYYMMDD(new Date(entry.date));
       if (entry.in_time) {
-        attendanceMap.set(normalizedDate, true);
+        attendanceMap.set(normalizedDate, { present: true, total_hours: entry.total_hours ?? null });
       }
     });
 
     const holidaySet = new Set<string>(
-      (holidayData ?? []).map(h => formatDateYYYYMMDD(new Date(h.date)))
+      (holidayData ?? []).filter(h => h.date).map(h => formatDateYYYYMMDD(new Date(h.date!)))
     );
 
     const leaveSet = new Set<string>();
     leaveData?.forEach(l => {
+      if (!l.from_date || !l.to_date) return;
       const from = new Date(l.from_date);
       const to = new Date(l.to_date);
       for (let d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) {
@@ -86,34 +88,33 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    const calendar: { date: string, status: string }[] = [];
-   for (let day = 1; day <= daysInMonth; day++) {
-  const dateObj = new Date(selectedYear, selectedMonth - 1, day);
+    const calendar: { date: string; status: string; total_hours: number | null }[] = [];
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateObj = new Date(selectedYear, selectedMonth - 1, day);
+      const isFuture = dateObj > today;
+      const dateStr = formatDateYYYYMMDD(dateObj);
+      const dayOfWeek = dateObj.getDay();
+      const attendanceEntry = attendanceMap.get(dateStr);
 
+      let status = "";
+      let total_hours: number | null = null;
+      if (!isFuture) {
+        if (attendanceEntry?.present) {
+          status = "Present";
+          total_hours = attendanceEntry.total_hours;
+        } else if (dayOfWeek === 0 || dayOfWeek === 6) {
+          status = "Weekend";
+        } else if (holidaySet.has(dateStr)) {
+          status = "Holiday";
+        } else if (leaveSet.has(dateStr)) {
+          status = "On Leave";
+        } else {
+          status = "Absent";
+        }
+      }
 
- const isFuture = dateObj > today;
-
-
-  const dateStr = formatDateYYYYMMDD(dateObj);
-  const dayOfWeek = dateObj.getDay();
-
-  let status = "";
-  if (!isFuture) {
-  if (attendanceMap.has(dateStr)) {
-    status = "Present";
-  } else if (dayOfWeek === 0 || dayOfWeek === 6) {
-    status = "Weekend";
-  } else if (holidaySet.has(dateStr)) {
-    status = "Holiday";
-  } else if (leaveSet.has(dateStr)) {
-    status = "On Leave";
-  } else {
-    status = "Absent";
-  }
-}
-
-  calendar.push({ date: dateStr, status });
-}
+      calendar.push({ date: dateStr, status, total_hours });
+    }
 
     return NextResponse.json({
       status: 1,

@@ -38,12 +38,21 @@ export async function POST(request: NextRequest) {
         }
         const { data: TaskData, error: taskError } = await query;
 
-        const { data: assignedTask } = await supabase.from("leap_customer_project_task_assignment")
-            .select(
-                'sub_project_id(sub_project_name),task_details,task_type_id(task_type_name),task_status(status, id)'
-            ).eq('assigned_to', customer_id).eq('task_date', formatDateYYYYMMDD(task_date));
+        if (taskError) {
+            return funSendApiErrorMessage(taskError, "Failed to fetch tasks");
+        }
+
+        let assignedTask: any[] = [];
+        if (funISDataKeyPresent(task_date) && funISDataKeyPresent(customer_id)) {
+            const { data: assigned } = await supabase.from("leap_customer_project_task_assignment")
+                .select(
+                    'sub_project_id(sub_project_name),task_details,task_type_id(task_type_name),task_status(status, id)'
+                ).eq('assigned_to', customer_id).eq('task_date', formatDateYYYYMMDD(task_date));
+            assignedTask = assigned || [];
+        }
+
         const myTasks = (TaskData || []).map(task => ({ ...task, type: "mytask" }));
-        const assignedTasks = (assignedTask || []).map(task => ({ ...task, type: "assigned" }));
+        const assignedTasks = assignedTask.map(task => ({ ...task, type: "assigned" }));
 
         const allTasks = [...myTasks, ...assignedTasks];
 
@@ -55,10 +64,7 @@ export async function POST(request: NextRequest) {
             }
         });
 
-      const totalwork = await funGetCompanyWorkingHour(client_id, 3);
-        if (taskError) {
-            return funSendApiErrorMessage(taskError, "Failed to add task");
-        }
+        const totalwork = await funGetCompanyWorkingHour(client_id, 3);
         return NextResponse.json({
             status: 1, message: "All Tasks",workingHour: totalwork, total_minutes: totalMinutes, data: allTasks,
         }, { status: apiStatusSuccessCode })

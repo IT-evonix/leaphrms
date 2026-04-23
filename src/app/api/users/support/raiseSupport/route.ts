@@ -16,11 +16,9 @@ function formatToYYMMDD(date: Date) {
   return `${year}${month}${day}`;
 }
 
-const currentDate = new Date();
-const formattedDate = formatToYYMMDD(currentDate);
-
 function generateTicketId(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const formattedDate = formatToYYMMDD(new Date());
   let result = '#' + formattedDate + '-';
   for (let i = 0; i < 6; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -88,7 +86,7 @@ export async function POST(request: NextRequest) {
     (async () => {
       let supportType = "";
       try {
-        const supportType = await funGetSupportType(type_id);
+        supportType = await funGetSupportType(type_id);
         const addActivity = await addUserActivities(client_id, customer_id, branch_id, "Support", supportType + "-" + ticketId, supportData[0].id, false);
         throw addActivity;
       } catch (err) {
@@ -101,7 +99,7 @@ export async function POST(request: NextRequest) {
       }
       if (customer_id) {
         const custName = await funGetSingleColumnValueCustomer(customer_id, "name");
-        const admin_id = await await funGetAdminID(client_id);
+        const admin_id = await funGetAdminID(client_id);
         try {
           const { data: shouldNotify, error } = await supabase.from("leap_client_notification_selected_types").select("*").eq("selected_notify_type_id", 5);
           if (shouldNotify && shouldNotify.length === 0) {

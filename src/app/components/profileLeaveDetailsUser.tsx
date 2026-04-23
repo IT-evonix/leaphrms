@@ -56,7 +56,7 @@ export const UserProfileLeaveDetails = () => {
             <div className="row">
                 <div className="col-lg-12">
                     <div className="d_user_new_details_mainbox mb-4">
-                        <div className="d_user_profile_heading">Leave Balances</div>
+                        <div className="d_user_profile_heading">Leave Balances 1111</div>
                         <div className="d_user_leave_balance_mainbox">
                             {empleaveBalances && empleaveBalances.customerLeavePendingCount.map((balance, index) =>
                                 <div className="d_user_leave_balance_listing" key={index}>

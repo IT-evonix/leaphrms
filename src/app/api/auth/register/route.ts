@@ -20,16 +20,18 @@ export async function POST(request: NextRequest) {
           }
           const {data: getCustomerData,error:getCustError}= await supabase.from('leap_customer').select('*').eq("email_id",signUpData.user?.email)
           if(getCustError){
-            return funSendApiErrorMessage(error , "Customer fetch Error");
+            return funSendApiErrorMessage(getCustError , "Customer fetch Error");
           }
           if(getCustomerData.length>0){
           const {data: customerData,error:custError}= await supabase.from('leap_customer').
                           update ({authUuid:signUpData.user?.id}).eq("email_id",signUpData.user?.email).select();
           if(custError){
-            return funSendApiErrorMessage(error , "Customer authID update error");
-          } 
-          
-          
+            return funSendApiErrorMessage(custError , "Customer authID update error");
+          }
+          if (!customerData || customerData.length === 0) {
+            return NextResponse.json({ status: 0, message: "Customer record not found after update" }, { status: 400 });
+          }
+
           responseData={authUID:customerData[0].authUuid,
             email:customerData[0].email_id || null,
             customer_id:customerData[0].customer_id || null,

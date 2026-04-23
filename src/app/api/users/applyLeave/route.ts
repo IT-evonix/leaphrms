@@ -19,7 +19,30 @@ export async function POST(request: NextRequest) {
       fileUploadResponse = await apiUploadDocs(files.file[0], fields.customer_id[0], fields.client_id[0], "applied_leave_docs")
 
     }
-    const totalLeaveDays = calculateNumDays(new Date(fields.from_date), new Date(fields.to_date));
+    const fromDate = new Date(fields.from_date[0]);
+    const toDate = new Date(fields.to_date[0]);
+    const duration = fields.duration[0];
+
+    // Same-date validation: full-day leave cannot have same from and to date unless it's explicitly a single day
+    if (fromDate > toDate) {
+      return NextResponse.json({ status: 0, message: "from_date cannot be after to_date" }, { status: 400 });
+    }
+
+    // Check for overlapping approved/pending leave
+    const { data: existingLeave } = await supabase
+      .from("leap_customer_apply_leave")
+      .select("id")
+      .eq("customer_id", fields.customer_id[0])
+      .in("leave_status", [1, 2])
+      .lte("from_date", fields.to_date[0])
+      .gte("to_date", fields.from_date[0])
+      .limit(1);
+
+    if (existingLeave && existingLeave.length > 0) {
+      return NextResponse.json({ status: 0, message: "A leave already exists for the selected date range" }, { status: 400 });
+    }
+
+    const totalLeaveDays = calculateNumDays(fromDate, toDate);
 
     let query = supabase.from("leap_customer_apply_leave")
       .insert({
@@ -34,7 +57,7 @@ export async function POST(request: NextRequest) {
         attachments: fileUploadResponse ? fileUploadResponse : "",
         leave_reason: fields.leave_reason[0],
         duration: fields.duration[0] || "Full day",
-        created_at: new Date()
+        created_at: new Date().toISOString()
       }).select();
 
     const { data, error } = await query;
@@ -95,7 +118,7 @@ export async function POST(request: NextRequest) {
       if (fields.customer_id[0]) {
         const custName = await funGetSingleColumnValueCustomer(fields.customer_id[0], "name");
         const manager_id = await funGetSingleColumnValueCustomer(fields.customer_id[0], "manager_id");
-        const admin_id = await await funGetAdminID(fields.client_id[0]);
+        const admin_id = await funGetAdminID(fields.client_id[0]);
         try {
           const { data: shouldNotify, error } = await supabase.from("leap_client_notification_selected_types").select("*").eq("selected_notify_type_id", 4);
           if (shouldNotify && shouldNotify.length === 0) {
@@ -112,7 +135,7 @@ export async function POST(request: NextRequest) {
             }
             if (admin_id) {
               const adminFormData = new FormData();
-              adminFormData.append("customer_id", String(manager_id));
+              adminFormData.append("customer_id", String(admin_id));
               adminFormData.append("title", "Leave Applied");
               adminFormData.append("notify_type", "4");// its 4 for leave in leap_push_notification_types table
               adminFormData.append("message", custName + " has applied for leave from " + formatDateYYYYMMDD(new Date(fields.from_date[0])) + " to " + formatDateYYYYMMDD(new Date(fields.to_date[0])) + ".");

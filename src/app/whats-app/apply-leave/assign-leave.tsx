@@ -10,6 +10,8 @@ import { Range } from 'react-date-range';
 import { ALERTMSG_FormExceptionString, whatsapp_number } from '@/app/pro_utils/stringConstants'
 import { useSearchParams } from "next/navigation";
 import { pageURL_whatsappSuccessPage } from '@/app/pro_utils/stringRoutes';
+import { whatsappCustomerInfoModel } from '@/app/models/singleTableModels'
+import { getCustomerClientIds } from '@/app/pro_utils/constantFunGetData'
 
 interface AssignEmpLeave {
     client_id: string,
@@ -38,16 +40,20 @@ const AssignLeave: React.FC = () => {
 
     const router = useRouter()
     useEffect(() => {
+        if (!contactNumber) return;
+        
         setLoadingCursor(true);
         const fetchData = async () => {
-            const custData = await getCustomerClientIds(contactNumber!);
-            setuserData(custData!);
+            const custData = await getCustomerClientIds(contactNumber);
+            setuserData(custData);
             // console.log("custData", userData);
-            // console.log("custData", userData[0].customer_id + userData[0].client_id + userData[0].branch_id);
-            const leavetype = await getLeave(custData[0].customer_id, custData[0].client_id, custData[0].branch_id);
-            console.log("leavetype", leavetype);
-            setLeave(leavetype);
-            // console.log("leavetype", leavetype);
+            if (custData.length > 0) {
+                // console.log("custData", userData[0].customer_id + userData[0].client_id + userData[0].branch_id);
+                const leavetype = await getLeave(custData[0].customer_id, custData[0].client_id, custData[0].branch_id);
+                console.log("leavetype", leavetype);
+                setLeave(leavetype);
+                // console.log("leavetype", leavetype);
+            }
             setLoadingCursor(false);
 
         };
@@ -65,7 +71,7 @@ const AssignLeave: React.FC = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, [])
+    }, [contactNumber])
     useEffect(() => {
 
         const expiryTimer = setTimeout(() => {
@@ -74,7 +80,7 @@ const AssignLeave: React.FC = () => {
         }, 5 * 60 * 1000); // 5 min
 
         return () => clearTimeout(expiryTimer);
-    }, []);
+    }, [router]);
     const [formValues, setFormValues] = useState<AssignEmpLeave>({
         client_id: "",
         branch_id: "",

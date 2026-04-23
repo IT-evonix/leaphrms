@@ -47,7 +47,7 @@ const Login = () => {
     
       console.log("login page called")
       
-    }, []);
+    }, [companyName, setGlobalState]);
   
   return (
     <div>

@@ -3,12 +3,14 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import supabase from '@/app/api/supabaseConfig/supabase'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { ALERTMSG_FormExceptionString, whatsapp_number } from '@/app/pro_utils/stringConstants'
-import ShowAlertMessage from '@/app/components/alert'
+import { useRouter, useSearchParams } from 'next/navigation';
+import { ALERTMSG_exceptionString, whatsapp_number } from '@/app/pro_utils/stringConstants'
+import moment from 'moment';
+import ShowAlertMessage from '@/app/components/alert';
+import { whatsappCustomerInfoModel } from '@/app/models/singleTableModels'
+import { getCustomerClientIds } from '@/app/pro_utils/constantFunGetData'
 import { pageURL_whatsappSuccessPage } from '@/app/pro_utils/stringRoutes';
 import { CustomerLeavePendingCount, EmpLeave } from '@/app/models/leaveModel'
-import moment from 'moment'
 
 const LeaveList: React.FC = () => {
     const [scrollPosition, setScrollPosition] = useState(0);
@@ -32,10 +34,12 @@ const LeaveList: React.FC = () => {
 
     const router = useRouter()
     useEffect(() => {
+        if (!contactNumber) return;
+        
         setLoadingCursor(true);
 
         const fetchData = async () => {
-            const custData = await getCustomerClientIds(contactNumber!);
+            const custData = await getCustomerClientIds(contactNumber);
             setuserData(custData);
             console.log("customer data:", userData);
             console.log("customer data:", userData);
@@ -57,7 +61,7 @@ const LeaveList: React.FC = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, [])
+    }, [contactNumber, userData])
 
 
     const getList = async () => {

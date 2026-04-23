@@ -53,6 +53,8 @@ export async function POST(request: NextRequest) {
       }
         if (funISDataKeyPresent(task_status)) {
             query = query.eq('task_status', task_status)
+        } else {
+            query = query.neq('task_status', 1)
         }
         if (funISDataKeyPresent(task_date)) {
             query = query.eq('task_date', task_date)

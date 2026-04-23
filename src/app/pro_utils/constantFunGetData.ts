@@ -1440,4 +1440,62 @@ export async function funGetTeamDetails(customer_id: any) {
   };
 }
 
+// WhatsApp utility functions
+export async function getCustomerClientIds(contactNumber: string) {
+  const { data, error } = await supabase
+    .from('leap_customer')
+    .select('*')
+    .eq('contact_number', contactNumber)
+    .eq('employment_status', true);
+
+  if (error) {
+    console.error('Error fetching customer client IDs:', error);
+    return [];
+  }
+  
+  return data || [];
+}
+
+export async function getSubProject(client_id: string) {
+  const { data, error } = await supabase
+    .from('leap_client_sub_projects')
+    .select('*')
+    .eq('client_id', client_id)
+    .eq('is_deleted', false);
+
+  if (error) {
+    console.error('Error fetching sub projects:', error);
+    return [];
+  }
+  
+  return data || [];
+}
+
+export async function getTaskTypes() {
+  const { data, error } = await supabase
+    .from('leap_project_task_types')
+    .select('*')
+    .eq('is_deleted', false);
+
+  if (error) {
+    console.error('Error fetching task types:', error);
+    return [];
+  }
+  
+  return data || [];
+}
+
+export async function getStatus() {
+  const { data, error } = await supabase
+    .from('leap_task_status')
+    .select('*');
+
+  if (error) {
+    console.error('Error fetching task status:', error);
+    return [];
+  }
+  
+  return data || [];
+}
+
 

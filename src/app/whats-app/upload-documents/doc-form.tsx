@@ -1,12 +1,12 @@
-
-
 'use client'
 import React, { useEffect, useState } from 'react'
 import supabase from '@/app/api/supabaseConfig/supabase'
-import { useSearchParams } from 'next/navigation';
-import { employeeDocUpload, whatsapp_number } from '@/app/pro_utils/stringConstants'
-import router from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation'
+import { ALERTMSG_FormExceptionString, whatsapp_number } from '@/app/pro_utils/stringConstants'
+import ShowAlertMessage from '@/app/components/alert'
 import { pageURL_whatsappSuccessPage } from '@/app/pro_utils/stringRoutes';
+import { whatsappCustomerInfoModel } from '@/app/models/singleTableModels'
+import { getCustomerClientIds } from '@/app/pro_utils/constantFunGetData'
 
 interface FormCompanyUploadDocDialog {
     docTypeID: any
@@ -31,6 +31,7 @@ const DocUploadApp: React.FC = () => {
     const searchParams = useSearchParams();
     const contactNumber = searchParams.get("contact_number");
     const [userData, setuserData] = useState<whatsappCustomerInfoModel[]>([]);
+    const router = useRouter();
     const [formFilledData, setformFilledData] = useState<FormEmpUploadDocDialog>({
         customer_id: "",
         emp_id: '',
@@ -40,14 +41,20 @@ const DocUploadApp: React.FC = () => {
         showToUsers: false
     });
     useEffect(() => {
+        if (!contactNumber) return;
+        
         const fetchData = async () => {
-            const custData = await getCustomerClientIds(contactNumber!);
-            setuserData(custData);
+            const custData = await getCustomerClientIds(contactNumber);
+            setuserData(custData.map(item => ({
+                customer_id: item.customer_id.toString(),
+                client_id: item.client_id.toString(),
+                branch_id: item.branch_id?.toString() || ''
+            })));
             const docTypes = await getDocumentsTypes()
             setDocTypes(docTypes);
         };
         fetchData();
-    }, [])
+    }, [contactNumber])
     useEffect(() => {
 
         const expiryTimer = setTimeout(() => {
@@ -56,7 +63,7 @@ const DocUploadApp: React.FC = () => {
         }, 5 * 60 * 1000); // 5 min
 
         return () => clearTimeout(expiryTimer);
-    }, []);
+    }, [router]);
 
     const handleEmpInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type, files } = e.target as HTMLInputElement;

@@ -743,7 +743,7 @@ input:checked+.slider:before {
   display: flex;
   gap: 20px;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .inner_heading12 {
@@ -1603,12 +1603,14 @@ header {
 
 .left_menubox {
   width: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .left_menubox::before {
   content: "";
   background-color: rgb(255, 255, 255);
-  float: left;
   padding: 9px 7px;
   border-radius: 10px;
   position: absolute;
@@ -1621,11 +1623,13 @@ header {
 
 .left_menubox a {
   width: auto;
+  display: block;
   float: left;
   margin: 0px 0px 4px;
   clear: both;
   position: relative;
   text-decoration: none;
+  list-style: none;
 }
 
 .left_menuicon {
@@ -2814,7 +2818,7 @@ background-color: #fff;
 }
 
 .buttons_box {
-  justify-content: end;
+  justify-content: flex-end;
   display: flex;
 }
 
@@ -3726,7 +3730,7 @@ background-color: #fff;
   border-radius: 12px;
   padding: 8px 10px;
   width: 100%;
-  justify-self: end;
+  justify-self: flex-end;
 }
 
 .new_user_fourth_rightbox {
@@ -3810,7 +3814,7 @@ background-color: #fff;
 
 .new_attendancebox_middlebox {
   /* min-width: 90%; */
-  /* justify-self: end; */
+  /* justify-self: flex-end; */
   /* padding: 10px 20px 10px 60px; */
   /* border-radius: 12px; */
   /* background-image: linear-gradient(to left, #ffab00, #FF6E20); */
@@ -3976,13 +3980,13 @@ background-color: #fff;
 
 .new_attendancebox_lastbox {
   /* align-self: center;
-    justify-self: end;
+    justify-self: flex-end;
     margin: -70px -16px 0 0px; */
 }
 
 .new_attendancebox_middlebox {
   /* min-width: 90%; */
-  /* justify-self: end; */
+  /* justify-self: flex-end; */
   /* padding: 10px 20px 10px 60px; */
   /* border-radius: 12px; */
   /* background-image: linear-gradient(to left, #ffab00, #FF6E20); */
@@ -4100,7 +4104,7 @@ background-color: #fff;
 
 .new_user_filter_mainbox {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .new_attendance_btn_listing_time {
@@ -4824,7 +4828,7 @@ input.new_upload_btn_input {
     width: 35px;
     height: 35px;
     align-self: start;
-    justify-self: end;
+    justify-self: flex-end;
     background-color: #6B8CA9;
     border-radius: 0 12px;
     transition-duration: 0.3s;
@@ -4920,7 +4924,7 @@ input.new_upload_btn_input {
 
 .user_new_add_btn_mainbox {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
 }
 
@@ -5151,7 +5155,7 @@ input.new_upload_btn_input {
     border-radius: 100%;
     width: 50px;
     height: 50px;
-    justify-self: end;
+    justify-self: flex-end;
     background-color: #ffffff;
 } */
 .d_user_leave_balance_balance {
@@ -5164,7 +5168,7 @@ input.new_upload_btn_input {
   border-radius: 8px;
   width: 100%;
   height: 100%;
-  justify-self: end;
+  justify-self: flex-end;
   background-color: #ffffff;
 }
 
@@ -5584,7 +5588,7 @@ input.new_upload_btn_input {
 
 /* help start */
 .nw_user_inner_tabs.nw_user_inner_right_tabs {
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 /* .nw_user_filter_mainbox {
@@ -5593,14 +5597,14 @@ input.new_upload_btn_input {
   text-align: end;
   top: 10px;
   gap: 10px;
-  justify-content: end;
+  justify-content: flex-end;
   display: flex;
   gap: 10px;
 } */
 
 .nw_user_filter_mainbox {
   text-align: end;
-  justify-content: end;
+  justify-content: flex-end;
   display: flex;
   gap: 10px;
   align-items: center;
@@ -7161,7 +7165,7 @@ opacity: 1;
 .new_home_task_type {
   width: fit-content;
   height: fit-content;
-  justify-self: end;
+  justify-self: flex-end;
   padding: 6px 20px;
   border-radius: 20px;
   border: 1px solid #C2D4E4;
@@ -7531,7 +7535,7 @@ opacity: 1;
   display: grid;
   position: relative;
   z-index: 10;
-  justify-self: end;
+  justify-self: flex-end;
   margin: 0 -20px 0 0;
   justify-items: end;
   filter: drop-shadow(0px 8px 10px #ccc);
@@ -7626,7 +7630,7 @@ opacity: 1;
 }
 
 .new_org_holiday_content_date {
-  justify-self: end;
+  justify-self: flex-end;
   display: flex;
   align-items: center;
   height: fit-content;
@@ -8338,7 +8342,7 @@ body:has(.user_mainbox_new_design) .dash_topbox {
 }
 
 .user_attendance_timer_box {
-  justify-self: end;
+  justify-self: flex-end;
   margin: 0px -30px -50px 0;
   filter: drop-shadow(0px 0px 12px #00000030);
   align-self: end;
@@ -8916,6 +8920,162 @@ body:has(.user_black_overlay_main .rightpoupopen) .nw_user_offcanvas .overlay_of
 /*--- END Dashboard css by Rahul ---*/
 
 /*--- END Dashboard css by Rahul ---*/
+
+/* =========================================
+   SIDEBAR RESPONSIVE FIXES
+   ========================================= */
+
+/* Base fix: remove stray dots from sidebar menu */
+.left_menubox,
+.left_menubox * {
+  list-style: none;
+}
+
+/* 1400px – large desktops (keep full sidebar) */
+@media screen and (max-width: 1400px) {
+  body:has(.user_mainbox_new_design) .nw_user_panel_mainbox {
+    grid-template-columns: 200px 1fr;
+  }
+  .left_menutext {
+    font-size: 13px;
+    min-width: 120px;
+    max-width: 160px;
+  }
+  body:has(.user_mainbox_new_design) .left_sticky::before {
+    width: calc(100% - 10px);
+  }
+}
+
+/* 1280px – smaller desktops / large tablets landscape */
+@media screen and (max-width: 1280px) {
+  body:has(.user_mainbox_new_design) .nw_user_panel_mainbox {
+    grid-template-columns: 180px 1fr;
+  }
+  .left_sticky::before {
+    width: calc(100% - 15px);
+  }
+  body:has(.user_mainbox_new_design) .left_sticky::before {
+    width: calc(100% - 10px);
+  }
+  .left_menutext {
+    font-size: 12px;
+    min-width: 110px;
+    max-width: 140px;
+  }
+  .left_mainbox {
+    width: 20%;
+  }
+  .right_mainbox {
+    width: 78%;
+  }
+}
+
+/* 1024px – tablets landscape */
+@media screen and (max-width: 1024px) {
+  body:has(.user_mainbox_new_design) .nw_user_panel_mainbox {
+    grid-template-columns: 70px 1fr;
+  }
+  /* Collapse to icon-only mode */
+  body:has(.user_mainbox_new_design) .left_menutext {
+    display: none;
+  }
+  body:has(.user_mainbox_new_design) .left_sticky::before {
+    width: 55px;
+  }
+  body:has(.user_mainbox_new_design) .left_menubox::before {
+    width: 48px;
+  }
+  body:has(.user_mainbox_new_design) .left_menubox a:hover .left_menutext {
+    display: block;
+    border: 0;
+    background-color: #ed2024;
+    width: auto;
+    min-width: max-content;
+    padding: 4px 12px;
+    color: #fff;
+    font-size: 11px;
+    border-radius: 30px;
+    z-index: 5;
+    position: absolute;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+  }
+  /* Fallback for non-new-design pages */
+  .left_mainbox {
+    width: 7%;
+  }
+  .right_mainbox {
+    width: 91%;
+  }
+  .left_menutext {
+    display: none;
+  }
+  .middle_box_extra .left_menubox a:hover .left_menutext {
+    display: block;
+  }
+  .toggle_box {
+    display: none;
+  }
+}
+
+/* 768px – tablets portrait */
+@media screen and (max-width: 768px) {
+  body:has(.user_mainbox_new_design) .nw_user_panel_mainbox {
+    grid-template-columns: 60px 1fr;
+    gap: 10px;
+  }
+  .left_mainbox {
+    width: 60px;
+    min-width: 60px;
+    flex-shrink: 0;
+  }
+  .right_mainbox {
+    width: calc(100% - 70px);
+  }
+  .left_menuicon {
+    width: 26px;
+    height: 24px;
+  }
+  body:has(.user_mainbox_new_design) .left_sticky::before {
+    width: 52px;
+  }
+}
+
+/* 576px – mobile landscape / small tablets */
+@media screen and (max-width: 576px) {
+  body:has(.user_mainbox_new_design) .nw_user_panel_mainbox {
+    grid-template-columns: 50px 1fr;
+    gap: 6px;
+  }
+  .left_mainbox {
+    width: 50px;
+    min-width: 50px;
+  }
+  .right_mainbox {
+    width: calc(100% - 56px);
+  }
+  .left_menuicon {
+    width: 24px;
+    height: 22px;
+    background-size: 50px;
+    border-radius: 6px;
+  }
+  body:has(.user_mainbox_new_design) .left_sticky::before {
+    width: 44px;
+  }
+  body:has(.user_mainbox_new_design) .left_menubox::before {
+    width: 40px;
+  }
+  .left_sticky {
+    padding: 10px 0 20px 0;
+  }
+}
+
+/* =========================================
+   END SIDEBAR RESPONSIVE FIXES
+   ========================================= */
 
 .nw_notification_date_listing{
     font-size: 11px;

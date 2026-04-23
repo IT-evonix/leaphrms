@@ -1,9 +1,5 @@
 
-
 ////// swapnil code of design on 16th april 2025
-
-
-
 'use client'
 import React from 'react'
 import LeapHeader from '@/app/components/header'
@@ -121,6 +117,14 @@ const AssetTypeList = () => {
             setAddTypeError("required")
             return ;
         }
+
+        //add by priyanka
+        const regex = /^[a-zA-Z ]+$/
+        if (!regex.test(formValues.assetType.trim())) {
+            setAddTypeError("Only chacaters and space is allowed")
+            return;
+        }
+        //add by priyanka
         
         formData.append("asset_type", formValues.assetType);
         formData.append("client_id", contextClientID );

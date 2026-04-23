@@ -4,8 +4,10 @@
 import React, { useEffect, useState } from 'react'
 import supabase from '@/app/api/supabaseConfig/supabase'
 import { useRouter, useSearchParams } from 'next/navigation';
-import { SubProject } from '@/app/models/TaskModel'
+import { SubProject, TaskType, TaskStatus } from '@/app/models/TaskModel'
+import { whatsappCustomerInfoModel } from '@/app/models/singleTableModels'
 import { ALERTMSG_exceptionString, whatsapp_number } from '@/app/pro_utils/stringConstants'
+import { getCustomerClientIds, getSubProject, getTaskTypes, getStatus } from '@/app/pro_utils/constantFunGetData'
 
 interface AddTaskForm {
     sub_project_id: string,
@@ -41,14 +43,18 @@ const ApplyTaskApp: React.FC = () => {
     const [errors, setErrors] = useState<Partial<AddTaskForm>>({});
 
     useEffect(() => {
+        if (!contactNumber) return;
+        
         setLoadingCursor(true);
         const fetchData = async () => {
-            const custData = await getCustomerClientIds(contactNumber!);
+            const custData = await getCustomerClientIds(contactNumber);
             setuserData(custData);
             // console.log("custData:", custData[0]);
-            const project = await getSubProject(custData[0].client_id);
-            //  console.log("project:", project);
-            setSubProject(project);
+            if (custData.length > 0) {
+                const project = await getSubProject(custData[0].client_id);
+                //  console.log("project:", project);
+                setSubProject(project);
+            }
             const task = await getTaskTypes();
             setTask(task);
             const taskStatus = await getStatus();
@@ -56,7 +62,7 @@ const ApplyTaskApp: React.FC = () => {
             setLoadingCursor(false);
         };
         fetchData();
-    }, [])
+    }, [contactNumber])
     useEffect(() => {
 
         const expiryTimer = setTimeout(() => {
@@ -65,7 +71,7 @@ const ApplyTaskApp: React.FC = () => {
         }, 5 * 60 * 1000); // 5 min
 
         return () => clearTimeout(expiryTimer);
-    }, []);
+    }, [router]);
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormValues((prev) => ({ ...prev, [name]: value }));

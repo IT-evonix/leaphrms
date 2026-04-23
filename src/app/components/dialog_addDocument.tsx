@@ -336,7 +336,9 @@ const DialogUploadDocument = ({ onClose, docType }: { onClose: () => void, docTy
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-lg-12"><label htmlFor="exampleFormControlInput1" className="form-label" >Document Type<span className='req_text'>*</span>:</label></div>
+                    <div className="col-lg-12 form_box">
+                        <label htmlFor="exampleFormControlInput1" className="form-label" >Document Type<span className='req_text'>*</span>:</label>
+                    </div>
                     <div className="col-lg-12 mb-4">
                         <div>
                             {docTypes.map((type, index) => (
@@ -351,7 +353,7 @@ const DialogUploadDocument = ({ onClose, docType }: { onClose: () => void, docTy
 
                     <div className="col-lg-12">
                         <div className="row">
-                            <div className="col-lg-12 mb-1">Document<span className='req_text'>*</span>: </div>
+                            <div className="col-lg-12 mb-1 form_box">Document<span className='req_text'>*</span>: </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-12 mb-4">

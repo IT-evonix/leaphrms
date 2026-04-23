@@ -163,7 +163,7 @@ export const formatDateYYYYMMDD = (date: any, isTime = false) => {
 
   if (isTime) return parsedDate.format('HH:mm A');
 
-  return parsedDate.format('YYYY/MM/DD');
+  return parsedDate.format('YYYY-MM-DD');
 };
 export const dashedDateYYYYMMDD = (date: any, isTime = false) => {
   if (!date) return '';
@@ -177,8 +177,8 @@ export const dashedDateYYYYMMDD = (date: any, isTime = false) => {
 export function funSendApiException(error: any) {
   return NextResponse.json({
     message: apifailedWithException,
-    error: error.toString(),
-    status:3
+    error: error != null ? error.toString() : "Unknown error",
+    status: 0
   }, { status: apiStatusFailureCode })
 }
 

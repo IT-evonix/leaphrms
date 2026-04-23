@@ -86,6 +86,18 @@ export interface LeapTaskStatus {
   created_at: string
 }
 
+export interface TaskType {
+  id: number
+  task_type_name: string
+  created_at: string
+}
+
+export interface TaskStatus {
+  id: number
+  status: string
+  created_at: string
+}
+
 export interface LeapApprovalStatus {
   id: number
   created_at: string

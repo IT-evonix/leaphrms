@@ -56,7 +56,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({
       message: "File upload failed",
       error: error instanceof Error ? error.message : String(error),
-      status: 500,
-    });
+      status: 0,
+    }, { status: 400 });
   }
 };

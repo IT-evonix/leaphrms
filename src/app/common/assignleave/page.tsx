@@ -395,7 +395,9 @@ const AssignLeave: React.FC = () => {
 
     const handleBranchIDChange = async (e: ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
-        setSelectedBranchID(value);
+        console.log(value);
+       // setSelectedBranchID(value);
+        setFormValues((prev) => ({ ...prev, ["branchID"]: value }));
         const emp = await getEmployee(value);
         setEmp(emp);
         let name: any[] = []
@@ -496,8 +498,11 @@ const AssignLeave: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        console.log("handle submit called",formValues);
+
         if (!validate()) return;
-        console.log("handle submit called");
+        console.log("handle submit called",formValues.branchID);
 
         formData.append("client_id", contextClientID);
         formData.append("branch_id", formValues.branchID);

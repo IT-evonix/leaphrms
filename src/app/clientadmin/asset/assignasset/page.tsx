@@ -172,11 +172,11 @@ const handleEmpSelectChange = async (values: any) => {
           router.push(pageURL_assetListing);
       } else {
         setLoading(false);
-                setShowAlert(true);
+        setShowAlert(true);
 
-                setAlertTitle("Error")
-                setAlertStartContent("Failed to recive assets or no data avaialable.");
-                setAlertForSuccess(2)
+        setAlertTitle("Error")
+        setAlertStartContent("Failed to recive assets or no data avaialable.");
+        setAlertForSuccess(2)
       }
   } catch (error) {
       console.log("Error submitting form:", error);

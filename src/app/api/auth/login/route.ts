@@ -57,7 +57,7 @@ export async function POST(request: Request) {
   catch (error) {
     console.log(error);
     
-    return NextResponse.json({ status:0,error: "Unexpected error occurred" }, { status: 500 });
+    return NextResponse.json({ status:0,error: "Unexpected error occurred" }, { status: 400 });
   }
 }
 
@@ -100,25 +100,17 @@ async function authUserDetails(authUUID: any, platform: any, fcm_token: any) {
 
 
   if (platform === "ios" || platform === "android") {
-    if (!customer.auth_token) {
-      // if null generate 
-      const generateAuthToken = generate16BitAlphanumericToken();
-      const newAuthToken = `${customer.customer_id}_${generateAuthToken}`;
+    // Always generate a fresh auth token on every login
+    const generateAuthToken = generate16BitAlphanumericToken();
+    const newAuthToken = `${customer.customer_id}_${generateAuthToken}`;
 
-      const { error: updateError } = await supabase
-        .from("leap_customer")
-        .update({ auth_token: newAuthToken })
-        .eq("customer_id", customer.customer_id);
+    const { error: updateError } = await supabase
+      .from("leap_customer")
+      .update({ auth_token: newAuthToken })
+      .eq("customer_id", customer.customer_id);
 
-      if (updateError) {
-        return funSendApiErrorMessage(updateError, "Unable to update token");
-      }
-    } else {
-  
-      const isValid = await isAuthTokenValid(platform, customer.customer_id, customer.auth_token);
-      if (!isValid) {
-        return funloggedInAnotherDevice(); 
-      }
+    if (updateError) {
+      return funSendApiErrorMessage(updateError, "Unable to update token");
     }
 
    

@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
             .neq("attendanceStatus", 2)
             .eq("date", now.toISOString().split("T")[0]);
         if (error) return new Response('Error fetching attendance', {
-            status: 500
+            status: 400
         });
         if (attendances) {
             for (const attendance of attendances) {
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
         return new Response(JSON.stringify({ message: "Cron job executed successfully" }), { status: 200 });
     } catch (error) {
         console.error("Error executing cron job:", error);
-        return new Response(JSON.stringify({ error: "Error executing cron job" }), { status: 500 });
+        return new Response(JSON.stringify({ error: "Error executing cron job" }), { status: 400 });
     }
 
 }

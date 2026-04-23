@@ -37,12 +37,11 @@ export async function POST(request: NextRequest) {
     };
 
     const previousTaskStatus = Number(taskData.task_status); // Convert to number
-    // here i want to add if the employee is directly changing the status completed then they can themselves input their hours and minutes spent on the task
-if (previousTaskStatus !== 2 && newTaskStatus !== 2) {
+    // Allow manual time entry only when directly completing a task (not via the working timer)
+    if (newTaskStatus === 3 && previousTaskStatus !== 2) {
       updateFields.total_hours = total_hours;
-        updateFields.total_minutes = total_minutes;
-    }
-    else if (previousTaskStatus !== 2 && newTaskStatus === 2) {
+      updateFields.total_minutes = total_minutes;
+    } else if (previousTaskStatus !== 2 && newTaskStatus === 2) {
       // Task just entered "Working" status
       updateFields.task_start_time = new Date();
     } else if (previousTaskStatus === 2 && newTaskStatus !== 2) {

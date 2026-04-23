@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
 
         const { data, error } = await supabase
             .from("leap_customer" )
-            .update({employment_status: "false"})
+            .update({employment_status: false})
             .eq("client_id", client_id)
             .eq("customer_id", customer_id);
 

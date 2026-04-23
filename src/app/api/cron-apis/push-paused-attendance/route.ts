@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
             console.log("Error fetching attendance:", error);
 
             return NextResponse.json({ message: 'Error fetching attendance', status: 0 }, {
-                status: 500
+                status: 400
             });
         }
 
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
         console.error("Error executing cron job:", error);
-        return new Response(JSON.stringify({ error: "Error executing cron job" }), { status: 500 });
+        return new Response(JSON.stringify({ error: "Error executing cron job" }), { status: 400 });
     }
 
 }

@@ -14,9 +14,9 @@ export async function POST(request: NextRequest) {
           }
         // here code will come for leap customer 
 
-          const NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiaWFtb3R2bXhrb25kd25xZ2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE4MjU2NjksImV4cCI6MjAzNzQwMTY2OX0.s_k0uxO8wB5_N2AhMWtXSKE078bc8aN1dveixgFmmGE"; // notice the "!"
-          const serviceRoleKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiaWFtb3R2bXhrb25kd25xZ2tvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMTgyNTY2OSwiZXhwIjoyMDM3NDAxNjY5fQ.HqKtV6PhUfbWe8a_Tjp3F3YZSlQZe4M_eqJNtgPk38E" // notice the "!"
-  
+          const NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+          const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
           const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/admin/users/${data.customer_UUID}`, {
               method: 'PUT',
               headers: {
@@ -24,12 +24,19 @@ export async function POST(request: NextRequest) {
                   apikey: NEXT_PUBLIC_SUPABASE_ANON_KEY,
                   'Content-Type': 'application/json',
                 },
-              body: JSON.stringify({ password: "nikhil123" }),
+              body: JSON.stringify({ password: data.newPassword }),
             });
           
             const result = await response.json();
-          
-    return NextResponse.json({ status :1,message: "Password updated successfully", data:"Api pending"  }, { status: apiStatusSuccessCode });
+
+          if (!response.ok) {
+            return NextResponse.json(
+              { status: 0, message: result?.msg || result?.message || "Password update failed" },
+              { status: response.status }
+            );
+          }
+
+    return NextResponse.json({ status: 1, message: "Password updated successfully", data: "" }, { status: apiStatusSuccessCode });
     }catch(error){
         return funSendApiException(error);
         

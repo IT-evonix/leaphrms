@@ -68,13 +68,12 @@ export async function POST(request: NextRequest) {
         const {data:DashboardPermission,error:perError} = await supabase.from("leap_client_employee_permissions")
             .select('*,leap_client_employee_permission_types(*)')
             .eq("customer_id",customer_id)
-            console.log(DashboardPermission);
             if (perError) {
-                return funSendApiErrorMessage(error,"Unable to get user permissions");
+                return funSendApiErrorMessage(perError,"Unable to get user permissions");
             }
-            const permission = DashboardPermission?.filter(permission =>
-                permission.leap_client_employee_permission_types?.permission_name === "Dashboard"
-              );
+            permission = DashboardPermission?.filter(p =>
+                p.leap_client_employee_permission_types?.permission_name === "Dashboard"
+              ) ?? [];
         }
 // here we create the result api response data into a single object
         let appInfoResult: any;

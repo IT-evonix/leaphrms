@@ -53,43 +53,26 @@ export async function POST(request: NextRequest) {
 
         query=query.order('date', { ascending: true });
 
-        console.log(query);
-        
         const { data: holidayData, error } = await query;
         if (error) {
-            return funSendApiErrorMessage("Failed to fetsch Holidays", error);
+            return funSendApiErrorMessage("Failed to fetch Holidays", error);
         }
-        // let upcomingQuery = supabase.from("leap_holiday_list")
-        //     .select(`id`)
-        //     .eq('client_id', fdata.clientID);
-        // if (branch_id) {
-        //     upcomingQuery = query.eq('branch_id', branch_id);
-        // }
-        // upcomingQuery = query.gte('date', formatDateYYYYMMDD(new Date())).limit(1);
-       
-
-
-        // const { data: holidayList, error: holidayError } = await query;
-        // if (holidayError) {
-        //     return funSendApiErrorMessage("failed to get Upcoming holiday",holidayError);
-        // }
-        console.log(holidayData);
         
-        const holidaysByMonth = holidayData.reduce((acc, holiday) => {
-            const monthName = new Date(holiday.date).toLocaleString("en-US", { month: "long" }); // Get month name
+        const holidaysByMonth = holidayData.reduce((acc: Record<string, any[]>, holiday) => {
+            if (!holiday.date) return acc;
+            const monthName = new Date(holiday.date).toLocaleString("en-US", { month: "long" });
             if (!acc[monthName]) {
               acc[monthName] = [];
             }
             acc[monthName].push(holiday);
             return acc;
           }, {});
-      
-          // **Convert grouped object into an array of objects**
+
           const formattedHolidays = Object.keys(holidaysByMonth).map((month) => ({
-            month: month,
+            month,
             holidays: holidaysByMonth[month],
           }));
-        return NextResponse.json({ status: 1, message: "All Holiday List", data: { totalHolidays: holidayData.length, holidays: platform &&(platform.toLowerCase()=="android"||platform=="ios")?formattedHolidays:holidayData } },
+        return NextResponse.json({ status: 1, message: "All Holiday List", data: { totalHolidays: holidayData.length, holidays: holidayData, holidaysByMonth: formattedHolidays } },
             { status: apiStatusSuccessCode });
 
     } catch (error) {

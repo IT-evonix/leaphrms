@@ -62,8 +62,8 @@ export async function POST(request: NextRequest) {
         return response;
     } catch (error) {
         console.error('Error reading file:', error);
-        return new Response(JSON.stringify({ message: 'Internal server error' }), {
-            status: 500,
+        return new Response(JSON.stringify({ message: 'File download failed', error: String(error) }), {
+            status: 400,
             headers: { 'Content-Type': 'application/json' },
         });
     }

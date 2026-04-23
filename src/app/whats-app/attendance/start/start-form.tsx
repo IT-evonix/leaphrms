@@ -7,6 +7,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { ALERTMSG_FormExceptionString, whatsapp_number } from '@/app/pro_utils/stringConstants'
 import ShowAlertMessage from '@/app/components/alert'
 import { pageURL_whatsappSuccessPage } from '@/app/pro_utils/stringRoutes';
+import { whatsappCustomerInfoModel } from '@/app/models/singleTableModels'
+import { getCustomerClientIds } from '@/app/pro_utils/constantFunGetData'
 
 interface attendanceModel {
   working_type_id: string;
@@ -34,10 +36,12 @@ const AttendanceStartForm: React.FC = () => {
   const [userData, setuserData] = useState<whatsappCustomerInfoModel[]>([]);
   const router = useRouter();
   useEffect(() => {
+    if (!contactNumber) return;
+    
     setLoadingCursor(true);
 
     const fetchData = async () => {
-      const custData = await getCustomerClientIds(contactNumber!);
+      const custData = await getCustomerClientIds(contactNumber);
       setuserData(custData);
       // console.log("Customer Data:", userData);
       const workType = await getWorkType();
@@ -60,7 +64,7 @@ const AttendanceStartForm: React.FC = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [])
+  }, [contactNumber])
 
   useEffect(() => {
 
@@ -70,7 +74,7 @@ const AttendanceStartForm: React.FC = () => {
     }, 5 * 60 * 1000); // 5 min
 
     return () => clearTimeout(expiryTimer);
-  }, []);
+  }, [router]);
 
   const [formValues, setFormValues] = useState<attendanceModel>({
     working_type_id: '',

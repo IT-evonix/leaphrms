@@ -1,6 +1,6 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useEffect } from 'react';
 // import { createClient } from '@supabase/supabase-js';
 import useSession from '@/app/pro_utils/sessionmgmt';
@@ -155,11 +155,11 @@ const LoginForm = () => {
         dashboard_notify_cust_id: '',
         dashboard_notify_activity_related_id: '',
         selectedClientCustomerID: '',
-        isAdmin: userData[0].user_role == 2 ? "1" : "0",
+        isAdmin: (userData[0].user_role == 2 || userData[0].user_role == 3) ? "1" : "0",
         contextPARAM8: '',
       });
-console.log("this is the login page goto dashboard function-----------------   "+pageURL_dashboard);
-      { userData[0].user_role != 2 ? router.push(pageURL_userEmpDashboard) : router.push(pageURL_dashboard) }
+      document.cookie = `role_id=${userData[0].user_role}; path=/; SameSite=Lax`;
+      { [1, 2, 3].includes(userData[0].user_role) ? router.push(pageURL_dashboard) : router.push(pageURL_userEmpDashboard) }
 
     } catch (e) {
       setLoading(false);
@@ -172,6 +172,31 @@ console.log("this is the login page goto dashboard function-----------------   "
 
   };
 
+  const goToDashboard = useCallback(async () => {
+    setGlobalState({
+      contextUserName: loginData!.name,
+      contextClientID: loginData!.client_id + "",
+      contaxtBranchID: loginData!.branch_id + "",
+      contextCustomerID: loginData!.customer_id + "",
+      contextRoleID: loginData!.user_role + "",
+      contextProfileImage: loginData!.profile_pic,
+      contextEmployeeID: loginData!.emp_id,
+      contextCompanyName: contextCompanyName,
+      contextLogoURL: contextLogoURL,
+      contextSelectedCustId: '',
+      contextAddFormEmpID: '',
+      contextAnnouncementID: '',
+      contextAddFormCustID: '',
+      dashboard_notify_cust_id: '',
+      dashboard_notify_activity_related_id: '',
+      selectedClientCustomerID: '',
+      isAdmin: (loginData!.user_role == 2 || loginData!.user_role == 3) ? "1" : "0",
+      contextPARAM8: '',
+    })
+    document.cookie = `role_id=${loginData!.user_role}; path=/; SameSite=Lax`;
+    { [1, 2, 3].includes(loginData!.user_role) ? router.push(pageURL_dashboard) : router.push(pageURL_userEmpDashboard) }
+
+  }, [loginData, router, setGlobalState, contextCompanyName, contextLogoURL]);
 
   useEffect(() => {
 
@@ -193,37 +218,11 @@ console.log("this is the login page goto dashboard function-----------------   "
       authListener.subscription.unsubscribe();
     };
 
-  }, [router, loginData]);
+  }, [router, loginData, goToDashboard, supabase.auth]);
 
   const handleAuthLogin = (event: any) => {
     setAuthLogin(event.target.value);
   };
-
-  const goToDashboard = async () => {
-    setGlobalState({
-      contextUserName: loginData!.name,
-      contextClientID: loginData!.client_id + "",
-      contaxtBranchID: loginData!.branch_id + "",
-      contextCustomerID: loginData!.customer_id + "",
-      contextRoleID: loginData!.user_role + "",
-      contextProfileImage: loginData!.profile_pic,
-      contextEmployeeID: loginData!.emp_id,
-      contextCompanyName: contextCompanyName,
-      contextLogoURL: contextLogoURL,
-      contextSelectedCustId: '',
-      contextAddFormEmpID: '',
-      contextAnnouncementID: '',
-      contextAddFormCustID: '',
-      dashboard_notify_cust_id: '',
-      dashboard_notify_activity_related_id: '',
-      selectedClientCustomerID: '',
-      isAdmin: loginData!.user_role==2 ? "1" : "0",
-      contextPARAM8: '',
-    })
-    
-    { loginData!.user_role != 2 ? router.push(pageURL_userEmpDashboard) : router.push(pageURL_dashboard) }
-
-  }
   // google sign up btn
   async function handleGoogleSignup() {
     try {
@@ -286,10 +285,11 @@ console.log("this is the login page goto dashboard function-----------------   "
           dashboard_notify_cust_id: '',
           dashboard_notify_activity_related_id: '',
           selectedClientCustomerID: '',
-          isAdmin: userData[0].user_role==2 ? "1" : "0",
+          isAdmin: (userData[0].user_role == 2 || userData[0].user_role == 3) ? "1" : "0",
           contextPARAM8: '',
         });
-        { userData[0].user_role != 2 ? router.push(pageURL_userEmpDashboard) : router.push(pageURL_dashboard) }
+        document.cookie = `role_id=${userData[0].user_role}; path=/; SameSite=Lax`;
+        { [1, 2, 3].includes(userData[0].user_role) ? router.push(pageURL_dashboard) : router.push(pageURL_userEmpDashboard) }
       }
       else {
         alert("No User Found");
@@ -371,10 +371,11 @@ console.log("this is the login page goto dashboard function-----------------   "
           dashboard_notify_cust_id: '',
           dashboard_notify_activity_related_id: '',
           selectedClientCustomerID: '',
-          isAdmin: userData[0].user_role==2 ? "1" : "0",
+          isAdmin: (userData[0].user_role == 2 || userData[0].user_role == 3) ? "1" : "0",
           contextPARAM8: '',
         });
-        { userData[0].user_role != 2 ? router.push(pageURL_userEmpDashboard) : router.push(pageURL_dashboard) }
+        document.cookie = `role_id=${userData[0].user_role}; path=/; SameSite=Lax`;
+        { [1, 2, 3].includes(userData[0].user_role) ? router.push(pageURL_dashboard) : router.push(pageURL_userEmpDashboard) }
 
       } else {
         setLoading(false);

@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
         let leaveQuery = supabase
             .from("leap_customer_apply_leave")
             .select(`*,leap_approval_status(approval_type),leap_client_leave(leave_name)`).eq('client_id', client_id).eq('customer_id', customer_id)
-            .gte("from_date", dashedDateYYYYMMDD(start_date)).lte("to_date", end_date);
+            .lte("from_date", formatDateYYYYMMDD(end_date)).gte("to_date", formatDateYYYYMMDD(start_date));
         //  console.log(leaveQuery);
 
         const { data: appliedLeavedata, error: appliedLeaveError } = await leaveQuery;

@@ -70,8 +70,8 @@ export const allEmployeeListData="All Clients Data";
 
 
 export const apiStatusSuccessCode=200;
-export const apiStatusFailureCode=500;
-export const apiStatusInvalidDataCode=200;
+export const apiStatusFailureCode=400;
+export const apiStatusInvalidDataCode=400;
 export const apiStatusUnAuthenticated=202;
 export const apiMessageUnAuthenticated='User not authenticated';
 
@@ -189,8 +189,8 @@ export const taskUpdateFailed="Task Failed";
 export const raiseSupportTitle=addEmpFormTitle
 
 
-export const getImageApiURL=`${process.env.NEXT_PUBLIC_BASE_URL}/api/uploads?imagePath=`
-export const staticIconsBaseURL=`${process.env.NEXT_PUBLIC_BASE_URL}`
+export const getImageApiURL=`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/uploads?imagePath=`
+export const staticIconsBaseURL=`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}`
 
 
 ////////------------Exceptions and error stings for alerts---------------

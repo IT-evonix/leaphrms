@@ -3,17 +3,14 @@ import { isAuthTokenValid } from "@/app/pro_utils/constantFunGetData";
 import { NextRequest, NextResponse } from "next/server";
 import supabase from "../../supabaseConfig/supabase";
 import { apiStatusSuccessCode } from "@/app/pro_utils/stringConstants";
-import { ifError } from "node:assert";
-import { format } from 'date-fns'
-
 export async function POST(request: NextRequest) {
-  async function getAttendanceRequestData(custID: string, date: any) {
+  async function getAttendanceRequestData(custID: string, formattedDateStr: string) {
   let query = supabase
     .from("leap_client_employee_requests")
     .select("*")
     .eq("customer_id", custID)
-    .eq("type_id", 8) 
-    .eq("description", format(date, "yyyy-MM-dd")); // request linked to the specific date
+    .eq("type_id", 8)
+    .eq("description", formattedDateStr); // request linked to the specific date
 
   const { data, error } = await query;
 

@@ -431,7 +431,7 @@ const AssetUpdate = ({ onClose, id }: { onClose: () => void, id: any }) => {
         if (!formValues.asset_type) newErrors.asset_type = "required";
         if (!formValues.device_code) newErrors.device_code = "required";
         if (!formValues.purchased_at) newErrors.purchased_at = "required";
-        if (!formValues.warranty_date) newErrors.warranty_date = "required";
+        // if (!formValues.warranty_date) newErrors.warranty_date = "required";
         if (!formValues.asset_status) newErrors.asset_status = "required";
         if (!formValues.remark) newErrors.remark = "required";
 
@@ -451,7 +451,7 @@ const AssetUpdate = ({ onClose, id }: { onClose: () => void, id: any }) => {
         formData.append("asset_type", formValues.asset_type);
         formData.append("device_code", formValues.device_code);
         formData.append("purchased_at", formValues.purchased_at);
-        formData.append("warranty_date", formValues.warranty_date);
+        formData.append("warranty_date", formValues.warranty_date || "");  //updated by priyanka
         formData.append("configuration", formValues.configuration);
         formData.append("asset_status", formValues.asset_status);
         formData.append("remark", formValues.remark);
@@ -494,12 +494,14 @@ const AssetUpdate = ({ onClose, id }: { onClose: () => void, id: any }) => {
 
         <div>
             <LoadingDialog isLoading={isLoading} />
-            {showAlert && <ShowAlertMessage title={alertTitle} startContent={alertStartContent} midContent={alertMidContent && alertMidContent.length > 0 ? alertMidContent : ""} endContent={alertEndContent.length > 0 ? alertEndContent : ""} value1={""} value2={""} onOkClicked={function (): void {
+            {showAlert && <ShowAlertMessage title={alertTitle} startContent={alertStartContent}
+             midContent={alertMidContent && alertMidContent.length > 0 ? alertMidContent : ""} 
+             endContent={alertEndContent.length > 0 ? alertEndContent : ""} value1={""} value2={""} 
+             onOkClicked={function (): void {
                 setShowAlert(false)
                 if (alertForSuccess == 1) {
                     onClose();
                 }
-
             }} onCloseClicked={function (): void {
                 setShowAlert(false)
             }} showCloseButton={false} imageURL={''} successFailure={alertForSuccess} />}
@@ -554,7 +556,7 @@ const AssetUpdate = ({ onClose, id }: { onClose: () => void, id: any }) => {
                     </div>
                     <div className="col-md-4">
                         <div className="form_box mb-3">
-                            <label htmlFor="formFile" className="form-label">Warranty Date<span className='req_text'>*</span>: </label>
+                            <label htmlFor="formFile" className="form-label">Warranty Date: </label>
                             <input type="date" id="warranty_date" name="warranty_date" value={formValues.warranty_date} min={formValues.purchased_at} onChange={(e) => setFormValues((prev) => ({ ...prev, ['warranty_date']: e.target.value }))} />
                             {errors.warranty_date && <span className='error' style={{ color: "red" }}>{errors.warranty_date}</span>}
                         </div>

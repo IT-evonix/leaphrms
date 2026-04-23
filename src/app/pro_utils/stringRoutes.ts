@@ -1,4 +1,4 @@
-export const baseUrl=process.env.NEXT_PUBLIC_BASE_URL;
+export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "/";
 
 
 export const pageURL_defaultLogin=baseUrl+"default/login";

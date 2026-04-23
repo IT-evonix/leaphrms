@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
       if (customer_id) {
         const custName = await funGetSingleColumnValueCustomer(customer_id, "name");
         const manager_id = await funGetSingleColumnValueCustomer(customer_id, "manager_id");
-        const admin_id = await await funGetAdminID(client_id);
+        const admin_id = await funGetAdminID(client_id);
         try {
           const { data: shouldNotify, error } = await supabase.from("leap_client_notification_selected_types").select("*").eq("selected_notify_type_id", 6);
           if (shouldNotify && shouldNotify.length === 0) {
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
             }
             if (admin_id) {
               const adminFormData = new FormData();
-              adminFormData.append("customer_id", String(manager_id));
+              adminFormData.append("customer_id", String(admin_id));
               adminFormData.append("title", "Task Added");
               adminFormData.append("notify_type", "6");// its 4 for leave in leap_push_notification_types table
               adminFormData.append("message", custName + " has added a new task " + ".");

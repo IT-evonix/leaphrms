@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
 
         const { data: insertCustomer, error: insertCustError } = await query;
         if (insertCustError) {
-            return NextResponse.json({ message: "Insert Customer Issue", error: insertCustError, status: apiStatusFailureCode })
+            return NextResponse.json({ message: "Insert Customer Issue", error: insertCustError, status: 0 }, { status: apiStatusFailureCode })
         }
         const { data: insertBirthday, error: insertBitdayError } = await supabase.from("leap_all_birthdays")
             .insert({
