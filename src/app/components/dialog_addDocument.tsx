@@ -162,7 +162,6 @@ const DialogUploadDocument = ({ onClose, docType }: { onClose: () => void, docTy
             } else {
                 formData.append("customer_id", contextCustomerID);
             }
-
             formData.append("file", formFilledData.selectedFile!);
             formData.append("branch_id", formFilledData.branch_id!);
             formData.append("doc_type_id", formFilledData.docTypeID);
@@ -322,7 +321,10 @@ const DialogUploadDocument = ({ onClose, docType }: { onClose: () => void, docTy
                 </div>
                 <LoadingDialog isLoading={isLoading} />
                 {showHtmlGenDialog && <SampleTemplateView html={html} onClose={() => setShowHtmlGeneratedDialog(false)} />}
-                {showAlert && <ShowAlertMessage title={alertTitle} startContent={alertStartContent} midContent={alertMidContent && alertMidContent.length > 0 ? alertMidContent : ""} endContent={alertEndContent} value1={alertValue1} value2={alertvalue2} onOkClicked={function (): void {
+                {showAlert && <ShowAlertMessage title={alertTitle} startContent={alertStartContent} 
+                midContent={alertMidContent && alertMidContent.length > 0 ? alertMidContent : ""} 
+                endContent={alertEndContent} value1={alertValue1} value2={alertvalue2} 
+                onOkClicked={function (): void {
                     setShowAlert(false)
                     if (alertForSuccess == 1) {
                         onClose();
@@ -342,7 +344,7 @@ const DialogUploadDocument = ({ onClose, docType }: { onClose: () => void, docTy
                     <div className="col-lg-12 mb-4">
                         <div>
                             {docTypes.map((type, index) => (
-                                <div key={type.id} className={inputData.docTypeID == type.id ? "comp_list comp_select" : "comp_list"} style={{ float: "left", height: "45px" }} onClick={() => handleDocTypeChange(type.id)}>{type.document_name}</div>
+                                <div key={type.id} className={inputData.docTypeID == type.id ? "comp_list comp_select" : "comp_list"} style={{ float: "left", height: "45px" }} onClick={() => handleDocTypeChange(type.id)}>{type.document_name} {type.id}</div>
                             ))}
                         </div>
                         {errors.docType_id && <span className='error' style={{ color: "red" }}>{errors.docType_id}</span>}
@@ -396,9 +398,15 @@ const DialogUploadDocument = ({ onClose, docType }: { onClose: () => void, docTy
                     <img src={staticIconsBaseURL + "/images/close_white.png"} alt="Search Icon" title='Close' />
                 </div>
                 <LoadingDialog isLoading={isLoading} />
-                {showAlert && <ShowAlertMessage title={alertTitle} startContent={alertStartContent} midContent={alertMidContent && alertMidContent.length > 0 ? alertMidContent : ""} endContent={alertEndContent} value1={alertValue1} value2={alertvalue2} onOkClicked={function (): void {
+                {showHtmlGenDialog && <SampleTemplateView html={html} onClose={() => setShowHtmlGeneratedDialog(false)} />}
+                {showAlert && <ShowAlertMessage title={alertTitle} 
+                startContent={alertStartContent} 
+                midContent={alertMidContent && alertMidContent.length > 0 ? alertMidContent : ""} 
+                endContent={alertEndContent} value1={alertValue1} value2={alertvalue2} onOkClicked={function (): void {
                     setShowAlert(false)
-
+                    if (alertForSuccess == 1) {
+                        onClose();
+                    }
                 }} onCloseClicked={function (): void {
                     setShowAlert(false)
                 }} showCloseButton={false} imageURL={''} successFailure={alertForSuccess} />}
@@ -466,8 +474,8 @@ const DialogUploadDocument = ({ onClose, docType }: { onClose: () => void, docTy
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <div className="row">
-                            <div className="col-lg-12 mb-1">Document<span className='req_text'>*</span>: </div>
+                        <div className="row \">
+                            <div className="col-lg-12 mb-1 form_box">Document<span className='req_text'>*</span>: </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-12">

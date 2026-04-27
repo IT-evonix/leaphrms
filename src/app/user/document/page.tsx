@@ -69,7 +69,7 @@ const EmployeeDocuments = () => {
                 }),
             });
             const response = await res.json();
-            console.log(response);
+            console.log('companyDoc--------',response,getImageApiURL);
             const companyDoc = response.data;
             if (response.status == 1) {
                 setOrgDoc(companyDoc)
@@ -263,7 +263,7 @@ const EmployeeDocuments = () => {
                                                         <div className="user_document_right_cardbox">
                                                             {orgDocArray.map((doc, index) => {
                                                                 const docEntry = doc.leap_client_documents?.[0]; // ✅ might be undefined
-                                                                const fileUrl = docEntry?.document_url ?? ""; // fallback to empty string
+                                                                const fileUrl = doc?.document_url ?? ""; // fallback to empty string
                                                                 // const fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
                                                                 // const fileExt = fileName.split(".").pop()?.toLowerCase() ?? "";
 
@@ -273,15 +273,22 @@ const EmployeeDocuments = () => {
                                                                 const fullFileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
                                                                 const fileExt = fullFileName.split(".").pop()?.toLowerCase() ?? "";
                                                                 const originalFileName = fullFileName.replace(/_client_org_docs.*$/, "");
+                                                                // const docpath = doc?.leap_client_documents?.[0]?.document_url
+                                                                //     ? `${getImageApiURL}/uploads/${doc.leap_client_documents[0].document_url}`
+                                                                //     : null;
+                                                                const docpath = doc?.document_url
+                                                                    ? `${getImageApiURL}/uploads/${doc?.document_url}`
+                                                                    : null;    
                                                                 return (
                                                                     <div className="user_document_right_card_listing" key={index}>
                                                                         {/* ------ */}
                                                                         <div className="user_document_right_card_icon_download_box">
                                                                             <div className="user_document_right_card_icon">
-                                                                                <img src={staticIconsBaseURL + "/images/user/adobe-pdf-icon.png"} alt="PDF icon" className="img-fluid" />
+                                                                                {/* <img src={docpath} alt="PDF icon" className="img-fluid" /> */}
+                                                                                <div className='document_list_icon'>{getFileIcon(fileExt, baseUrl + doc.document_url)}</div>
                                                                             </div>
                                                                             <div className="user_document_right_card_download">
-                                                                                <a href={getImageApiURL + "/uploads/" + doc.leap_client_documents[0].document_url} download>
+                                                                                <a href={docpath} download>
                                                                                     <svg width="20" height="20" x="0" y="0" viewBox="0 0 24 24">
                                                                                         <g>
                                                                                             <g fill="#000">
@@ -299,7 +306,7 @@ const EmployeeDocuments = () => {
                                                                                 {originalFileName}
                                                                             </div>
                                                                             <div className="user_document_right_card_type">
-                                                                                {doc.document_name}
+                                                                                {doc.leap_document_type.document_name}
                                                                             </div>
                                                                         </div>
                                                                         {/* ------ */}

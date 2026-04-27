@@ -69,6 +69,7 @@ const OrganizationalDocuments = () => {
     const fetchData = async () => {
         setLoading(true);
         const docs = await getDocuments(contextClientID);
+
         setDocumentsArray(docs);
          setLoading(false);
     }
@@ -191,7 +192,7 @@ async function getDocuments(clientID: any) {
 
         return [];
     } else {
-        // console.log(data);
+        
         return data;
     }
 

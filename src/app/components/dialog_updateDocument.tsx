@@ -94,7 +94,7 @@ const DialogUpdateDocument = ({ onClose,replaceType,edit_id,docTypeId,customerID
         
         formData.append("client_id", contextClientID);
          if(!validate()){return;}
-        console.log();
+      
         setLoading(true);   
         formData.append("file", inputData.selectedFile!);
         if (replaceType == companyDocUpload) {
@@ -102,7 +102,7 @@ const DialogUpdateDocument = ({ onClose,replaceType,edit_id,docTypeId,customerID
             formData.append("doc_pk_id", edit_id.toString());
             formData.append("doc_type_id", edit_id.toString());
             formData.append("uploadType", companyDocUpload);
-            
+            formData.append("customer_id", '');    //added by priyanka
             
         } else {
             formData.append("uploadType", employeeDocUpload);
@@ -235,7 +235,7 @@ const DialogUpdateDocument = ({ onClose,replaceType,edit_id,docTypeId,customerID
                         
                         <div className="col-md-12">
                             <div className="row">
-                                <div className="col-lg-12 mb-1">Document<span className='req_text'>*</span>: </div>
+                                <div className="col-lg-12 mb-1 form_box">Document<span className='req_text'>*</span>: </div>
                             </div>
                             <div className="row">
                                 <div className="col-lg-12">

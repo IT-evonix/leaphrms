@@ -32,23 +32,32 @@ export async function POST(request: NextRequest) {
                 return funloggedInAnotherDevice()
             }
             let query = supabase
-            .from('leap_document_type')
-            .select('*,leap_client_documents(*)')
-            .eq("document_type_id",1)
-            .eq("leap_client_documents.client_id",client_id);
+            .from('leap_client_documents')
+             .select(`
+              *,
+              leap_document_type:document_type_id (
+                document_name
+              )
+            `)
+            // .select()
+            .eq("client_id",client_id)
+            .eq("show_to_employees",true);
 
-            if(branch_id){
-              query=query.eq("leap_client_documents.branch_id",branch_id);
-            }
+            // if(branch_id){
+            //   query=query.eq("branch_id",branch_id);
+            // }
     
             const { data, error } = await query;
+            console.log('comapny doc',data);
     if (error) {
+      console.log('Unable to get Documents');
       return funSendApiErrorMessage(error, "Unable to get Documents")
-    }
-    else {
-      const filteredData = data.filter(item => 
-        item.leap_client_documents && item.leap_client_documents.length > 0
-    );
+    }else {
+      // const filteredData = data.filter(item => 
+      //   item.leap_client_documents && item.leap_client_documents.length > 0
+      // );  
+      const filteredData = data;
+
   //   const processedData = filteredData.map(item => ({
   //     ...item,
   //     leap_customer_documents: item.leap_customer_documents.map((doc) => ({

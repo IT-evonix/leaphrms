@@ -16,6 +16,7 @@ const AnnouncementListing = () => {
     const [ShowDeleteAnnouncementDialog, setShowDeleteAnnouncementDialog] = useState(false);
     const [AnnouncementDeleteTitle, setAnnouncementDeleteTitle] = useState('');
     const [announcementList, setAnnouncementList] = useState<AnnouncementList[]>([]);
+    const [pastAnnouncementList, setPastAnnouncementList] = useState<AnnouncementList[]>([]);
     const { contextClientID, contaxtBranchID, contextCompanyName, contextCustomerID, contextEmployeeID,
         contextLogoURL, contextRoleID, contextProfileImage,isAdmin, contextUserName, setGlobalState } = useGlobalContext();
     const router = useRouter();
@@ -60,7 +61,9 @@ const AnnouncementListing = () => {
             if (res.ok) {
                 const response = await res.json();
                 if (response.status === 1) {
-                    setAnnouncementList(response.data);
+                    console.log('announcement list-------------',response.active)
+                    setAnnouncementList(response.active);
+                    setPastAnnouncementList(response.previous);
                     setLoading(false);
                 } else {
                     alert(response.message)
@@ -120,7 +123,7 @@ const AnnouncementListing = () => {
                     <div className='inner_heading_sticky'>
                         <div className="row heading25 mb-3 pt-2">
                             <div className="col-lg-8">
-                                Announcement/ News <span>list</span>
+                                Current Announcement/ News <span>list</span>
                             </div>
                             <div className="col-lg-4 mb-2" style={{ textAlign: "right" }}>
                                 <a href={pageURL_createAnnouncement} className="red_button" >Create Announcement</a>
@@ -165,7 +168,57 @@ const AnnouncementListing = () => {
                                         <h4 className="text-muted">No Announcement Available</h4>
                                     </div>}
                         </div>
-                    </div> </div>} />
+                    </div> 
+                     
+                     <div className='inner_heading_sticky'>
+                        <div className="row heading25 mb-3 pt-3">
+                            <div className="col-lg-8">
+                                Past Announcement/ News <span>list</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="">
+                        <div className="row">
+                            {pastAnnouncementList && pastAnnouncementList.length>0?pastAnnouncementList.map((announcement) => (
+                                <div className="col-md-3 text-center col-sm-6 mb-3" key={announcement.announcement_id} >
+                                    <div className='announcement_list'>
+                                        <div className="row">
+                                            <div className="col-lg-12 mb-3">
+                                                <div className='announcement_img' style={{height:'100px'}}>
+                                                    <img src={announcement.announcement_image && announcement.announcement_image.length > 0 ? getImageApiURL + "/uploads/" + announcement.announcement_image : staticIconsBaseURL + "/images/"} onError={(e) => { const target = e.target as HTMLImageElement; target.onerror = null; target.src = staticIconsBaseURL + "/images/announcement_default_img.png"; }} alt='text' className="img-fluid" style={{ objectFit: 'cover', }} />
+                                                </div>
+                                            </div>
+
+                                            <div className="col-lg-12 mb-2 announcement_heading" style={{
+                                                wordWrap: "break-word",
+                                                textOverflow: "ellipsis",
+                                                overflow: "hidden",
+                                                display: "-webkit-box",
+                                                WebkitLineClamp: 3, // max lines
+                                                WebkitBoxOrient: "vertical"
+                                            }}>{announcement.announcement_title}</div>
+                                            <div className="col-lg-12 mb-3 announcement_content" style={{
+                                                wordWrap: "break-word",
+                                                textOverflow: "ellipsis",
+                                                overflow: "hidden",
+                                                display: "-webkit-box",
+                                                WebkitLineClamp: 3, // max lines
+                                                WebkitBoxOrient: "vertical"
+                                            }}>{announcement.announcement_details}</div>
+                                            <div className="col-lg-12 mb-3">
+                                                <div className='announcement_edit' onClick={(e) => goToUpdate(e, announcement.announcement_id)}>Edit</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )):isLoading?<></>:<div className="no_data_available">
+                                        <h4 className="text-muted">No Announcement Available</h4>
+                                    </div>}
+                        </div>
+                    </div>          
+                    </div>} />
+                   
+                    
             <Footer />
         </div>
     );

@@ -10,6 +10,7 @@ uploads/
 .next/
 .env
 .env.local
+.env.test
 
 # Compiled Java class files
 *.class
